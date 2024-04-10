@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Local file read</title>
+<!--  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/dark.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+  <!-- and it's easy to individually load additional languages -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/go.min.js"></script>
+  <style>
+    html, body {
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      margin: 0;
+    }
+    main{
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      height: 100%;
+    }
+    #sideBar {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      background-color: rgb(23, 23, 23);
+      gap: 5px;
+      overflow: hidden;
+    }
+    #fileContent {
+      display: flex;
+      flex-direction: column;
+      flex: 4;
+      background-color: rgb(37, 37, 37);
+      padding: 10px;
+      overflow: auto;
+    }
+    #fileView {
+      word-break: break-word;
+      color: #fff;
+    }
+    #openFolder {
+      width: 80%;
+      height: 25px;
+      background: cornflowerblue;
+      margin: 10px auto;
+      color: #fff;
+      border-radius: 9px;
+      border-color: cornflowerblue;
+    }
+    .file-item {
+      padding: 4px 10px;
+      color: #fff;
+      cursor: pointer;
+      &:hover{
+        background: rgba(79, 77, 77, 0.4);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <aside id="sideBar">
+      <button id="openFolder">open folder</button>
+    </aside>
+    <section id="fileContent">
+      <pre id="fileView">
+        <code id="codeView">
+        </code>
+      </pre>
+    </section>
+  </main>
+  <script src="./index.js"></script>
+</body>
+</html>
