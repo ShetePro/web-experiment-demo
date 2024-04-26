@@ -5,23 +5,29 @@ let boxData = []
 let tetrisData = []
 const blockConfig = {
   level: 10,
+  size: canvas.width / 10
 }
 let activeBlock = []
 function setBackground (init = true) {
-  const size = canvas.width / blockConfig.level
+  const size = blockConfig.size
   for (let row = 0; row < blockConfig.level * 2; row++) {
     const arr = []
     const tetrisArr = []
     for (let column = 0; column < blockConfig.level; column++) {
-      const block = new Block({
-        ctx,
-        x: size * column,
-        y: size * row,
-        size: size,
-        color: '#ded9d9'
-      })
-      arr.push(block)
-      tetrisArr.push(0)
+      
+      if (init) {
+        const block =  new Block({
+          ctx,
+          x: size * column,
+          y: size * row,
+          size: size,
+          color: '#ded9d9'
+        })
+        arr.push(block)
+        tetrisArr.push(0)
+      }else {
+        boxData[row][column].render()
+      }
     }
     if (init) {
       boxData.push(arr)
@@ -33,23 +39,17 @@ ctx.fillStyle = '#000000'
 ctx.fillRect(0, 0, canvas.width, canvas.height)
 ctx.stroke()
 setBackground()
-const downStack = {
-  0: [[0,5],[0,6], [1,6],[1,7]]
-}
-let downBlock = downStack[0]
-function renderDownBlock () {
-  const size = canvas.width / blockConfig.level
-  const block = new TetrisBlock({
+function renderDownBlock (color = 'red') {
+  activeBlock = new TetrisBlock({
     ctx,
     tetrisData,
-    type: downBlock,
-    size,
-    color: 'red'
+    type: [[0,5],[0,6], [1,6],[1,7]],
+    size: blockConfig.size,
+    color
   })
-  activeBlock = block
-  setDown()
 }
 renderDownBlock()
+setDown()
 function renderTetrisView () {
   ctx.beginPath()
   ctx.clearRect(0, 0, canvas.width, canvas.height)
@@ -63,7 +63,16 @@ function renderTetrisView () {
 
 function setDown () {
   setInterval(() => {
-    activeBlock.down()
+    if (activeBlock.lock) {
+      activeBlock.blocks.forEach(item => {
+        tetrisData[item[0]][item[1]] = 1
+        boxData[item[0]][item[1]].fillColor = activeBlock.color
+      })
+      renderDownBlock('green')
+      console.log(boxData)
+    }else {
+      activeBlock.down()
+    }
   }, 1000)
 }
 const keyFunction = {
