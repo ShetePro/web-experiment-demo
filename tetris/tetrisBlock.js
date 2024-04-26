@@ -6,6 +6,8 @@ class TetrisBlock {
     this.type = opt.type
     this.blocks = [...this.type]
     this.lock = false
+    this.leftLock = false
+    this.rightLock = false
     this.tetirsData = opt.tetrisData
     this.maxRow = this.tetirsData.length
     this.maxColumn = this.tetirsData[0].length
@@ -36,21 +38,33 @@ class TetrisBlock {
     this.setMax()
   }
   left () {
-    if (this.lock) {
+    if (this.lock || this.leftLock) {
       return
     }
+    let lock = false
     this.blocks.forEach(block => {
       block[1]--
+      if (block[1] === 0) {
+        lock = true
+      }
     })
+    this.rightLock = false
+    this.leftLock = lock
     this.setMax()
   }
   right () {
-    if (this.lock) {
+    if (this.lock || this.rightLock) {
       return
     }
+    let lock = false
     this.blocks.forEach(block => {
       block[1]++
+      if (block[1] === this.maxColumn - 1) {
+        lock = true
+      }
     })
+    this.leftLock = false
+    this.rightLock = lock
     this.setMax()
   }
   render () {
