@@ -9,18 +9,23 @@ class TetrisBlock {
     this.leftLock = false
     this.rightLock = false
     this.tetirsData = opt.tetrisData
-    this.maxRow = this.tetirsData.length
+    this.maxRow = this.tetirsData.length - 1
     this.maxColumn = this.tetirsData[0].length
     this.render()
+    this.setMax()
   }
   setMax () {
     this.blocks.forEach(block => {
       const span = block[1]
-      for (let i = this.tetirsData.length -1; i >= 0; i--) {
-        if (this.tetirsData[i][span] === 0) {
+      for (let i = block[0]; i < this.tetirsData.length; i++) {
+        if (i === this.tetirsData.length - 1) {
           this.maxRow = Math.min(this.maxRow, i - block[0])
           return
+        }else if (this.tetirsData[i][span] !== 0) {
+          this.maxRow = Math.min(this.maxRow, i - block[0] - 1)
+          return
         }
+        
       }
     })
     if (this.maxRow === 0) {
