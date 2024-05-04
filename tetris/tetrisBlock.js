@@ -1,7 +1,7 @@
 class TetrisBlock {
   constructor(opt) {
-    this.color = opt.color || 'red'
     this.ctx = opt.ctx
+    this.color = opt.color || '#3498DB'
     this.size = opt.size
     this.type = opt.type
     this.blocks = [...this.type]
@@ -11,8 +11,13 @@ class TetrisBlock {
     this.tetirsData = opt.tetrisData
     this.maxRow = this.tetirsData.length - 1
     this.maxColumn = this.tetirsData[0].length
+    this.over = opt.over
     this.render()
     this.setMax()
+  }
+  setColor () {
+    const random = Math.floor(Math.random() * 10) % 6
+    this.color = colorList[random]
   }
   setMax () {
     this.blocks.forEach(block => {
@@ -25,13 +30,11 @@ class TetrisBlock {
           this.maxRow = Math.min(this.maxRow, i - block[0] - 1)
           return
         }
-        
       }
     })
     if (this.maxRow === 0) {
       this.lock = true
     }
-    console.log(this.maxRow, 'maxRow')
   }
   down () {
     if (this.lock) {
@@ -73,6 +76,13 @@ class TetrisBlock {
     this.setMax()
   }
   render () {
+    const isOver = this.blocks.find(block => {
+      return this.tetirsData[block[0]][block[1]]
+    })
+    if (isOver) {
+      this.over()
+      return
+    }
     this.ctx.beginPath();
     this.ctx.fillStyle = this.color
     this.type.forEach(block => {
