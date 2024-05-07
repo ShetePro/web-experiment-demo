@@ -32,3 +32,32 @@ class Block {
   }
 }
 
+class ModuleOne {
+  constructor() {
+    this.xy = []
+    this.direction = 'right'
+  }
+  render (origin) {
+    const callback = this.direction === 'left' ? this.leftType : this.rightType
+    callback.call(this,origin)
+    return this.xy
+  }
+  leftType (origin) {
+    const one = origin
+    const two =[one[0] + 1, origin[1]]
+    const three = [two[0], two[1] - 1]
+    const four = [three[0] + 1, three[1]]
+    this.xy = [one, two, three, four]
+  }
+  rightType (origin) {
+    const two =[origin[0], origin[1] + 1]
+    const three = [two[0] + 1, two[1]]
+    const four = [three[0], three[1] + 1]
+    this.xy = [origin, two, three, four]
+  }
+  change (origin) {
+    this.direction = this.direction === 'left' ? 'right' : 'left'
+    return this.render(origin)
+  }
+  
+}

@@ -4,7 +4,8 @@ class TetrisBlock {
     this.color = opt.color || '#3498DB'
     this.size = opt.size
     this.type = opt.type
-    this.blocks = [...this.type]
+    this.module = new this.type()
+    this.blocks = [...this.module.render([0, 4])]
     this.lock = false
     this.leftLock = false
     this.rightLock = false
@@ -12,15 +13,12 @@ class TetrisBlock {
     this.maxRow = this.tetirsData.length - 1
     this.maxColumn = this.tetirsData[0].length
     this.over = opt.over
+    this.lockHandle = opt.lockHandle
     this.render()
     this.setMax()
   }
-  setColor () {
-    const random = Math.floor(Math.random() * 10) % 6
-    this.color = colorList[random]
-  }
-  setMax () {
-    this.blocks.forEach(block => {
+  setMax (list = this.blocks) {
+    list?.forEach(block => {
       const span = block[1]
       for (let i = block[0]; i < this.tetirsData.length; i++) {
         if (i === this.tetirsData.length - 1) {
@@ -36,8 +34,18 @@ class TetrisBlock {
       this.lock = true
     }
   }
+  up () {
+    const blocks = this.module.change(this.blocks[0])
+    this.setMax(blocks)
+    console.log(blocks)
+    if (this.lock) {
+      return
+    }
+    this.blocks = blocks
+  }
   down () {
     if (this.lock) {
+      this.lockHandle()
       return
     }
     this.blocks.forEach(block => {
@@ -85,7 +93,7 @@ class TetrisBlock {
     }
     this.ctx.beginPath();
     this.ctx.fillStyle = this.color
-    this.type.forEach(block => {
+    this.blocks.forEach(block => {
       this.ctx.fillRect(block[1] * this.size , block[0] * this.size, this.size, this.size)
     })
   }

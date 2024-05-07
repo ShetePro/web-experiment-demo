@@ -46,14 +46,20 @@ function renderDownBlock () {
   if (isOver) {
    return
   }
-  const type = [[0,5],[0,6], [1,6],[1,7]]
   activeBlock = new TetrisBlock({
     ctx,
+    type: ModuleOne,
     tetrisData,
-    type,
     size: blockConfig.size,
     color: colorList[colorIndex],
-    over: gameOver
+    over: gameOver,
+    lockHandle: () => {
+      activeBlock.blocks.forEach(item => {
+        tetrisData[item[0]][item[1]] = 1
+        boxData[item[0]][item[1]].fillColor = activeBlock.color
+      })
+      renderDownBlock()
+    }
   })
   colorIndex = colorIndex >= colorList.length - 1 ? 0 : colorIndex + 1
 }
@@ -78,33 +84,21 @@ function setDown () {
       return
     }
     if (activeBlock.lock) {
-      activeBlock.blocks.forEach(item => {
-        tetrisData[item[0]][item[1]] = 1
-        boxData[item[0]][item[1]].fillColor = activeBlock.color
-      })
-      renderDownBlock()
+    
     }else {
       activeBlock.down()
     }
   }, 1000)
 }
-const keyFunction = {
-  'ArrowLeft': leftHandle,
-  'ArrowRight': rightHandle,
-  'ArrowDown': downHandle,
-}
-function leftHandle () {
-  activeBlock.left()
-}
-function rightHandle () {
-  activeBlock.right()
-}
-function downHandle () {
-  activeBlock.down()
-}
 document.addEventListener('keydown', (e) => {
   const keyCode = e.key
-  keyFunction[keyCode]?.()
+  console.log(keyCode)
+  switch (keyCode) {
+    case 'ArrowLeft': activeBlock.left();break
+    case 'ArrowRight': activeBlock.right();break
+    case 'ArrowDown': activeBlock.down();break
+    case 'ArrowUp': activeBlock.up();break
+  }
 })
 
 function gameOver () {
